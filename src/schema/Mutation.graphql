@@ -1,0 +1,61 @@
+var db = require("../models");
+// console.log('db',db)
+const Employee = db.employee;
+
+const { GraphQLList, GraphQLInt, GraphQLString } = require("graphql");
+const EmployeeType = require("../TypeDefs/EmployeeType");
+const StatusType = require('../TypeDefs/StatusType')
+const {resolve,updates} =require("../resolvers/create-employee");
+console.log(resolve)
+module.exports.Employee_ADD = {
+  type: EmployeeType,
+  args: {
+    emp_id: { type: GraphQLInt },
+    first_name: { type: GraphQLString },
+    last_name: { type: GraphQLString },
+    sex: { type: GraphQLString },
+    salary: { type: GraphQLInt },
+    branch_id: { type: GraphQLInt },
+  },
+ resolve
+};
+
+
+// EMPLOYEE UPDATE
+
+module.exports.Employee_UPDATE = {
+    type: EmployeeType,
+    args: {
+      emp_id: { type: GraphQLInt },
+      first_name: { type: GraphQLString },
+      last_name: { type: GraphQLString },
+      sex: { type: GraphQLString },
+      salary: { type: GraphQLInt },
+      branch_id: { type: GraphQLInt },
+    },
+  resolve(parent, args){
+  return updates(parent, args)
+},
+  };
+
+
+//   EMPLOYEE DELETE
+
+module.exports.Employee_DELETE = {
+    type: StatusType,
+    args: {
+      emp_id: { type: GraphQLInt },
+      
+    },
+    resolve(parent, args) {
+      Employee.destroy({
+          where :{
+            emp_id:args.emp_id
+          }
+      });
+      console.log(args);
+      return {
+          success:true, message:"Deleted Successfully", error:""
+      };
+    },
+  };

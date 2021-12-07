@@ -1,0 +1,42 @@
+var db = require("../models");
+// console.log('db',db)
+const Branch = db.branch
+
+const { GraphQLList,GraphQLInt } = require("graphql");
+const BranchType = require('../TypeDefs/BranchType')
+const {resolve} =require("../resolvers/employee-details");
+console.log(resolve,"line")
+
+module.exports.Branch_LIST = {
+    type: new GraphQLList(BranchType),
+    resolve(parent, args) {
+      let data = Branch.findAll();
+      console.log("data-", data);
+      return data;
+    },
+  };
+
+
+
+
+const Employee = db.employee;
+
+
+const EmployeeType = require('../TypeDefs/EmployeeType')
+
+module.exports.Employee_LIST = {
+  type: new GraphQLList(EmployeeType),
+  resolve(parent, args) {
+    let data = Employee.findAll();
+    console.log("data-", data);
+    return data;
+  },
+};
+
+module.exports.Employee_DETAILS = {
+    type: new GraphQLList(EmployeeType),
+    args:{
+        emp_id:{ type: GraphQLInt },
+    },
+   resolve
+  };
